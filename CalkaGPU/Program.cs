@@ -1,14 +1,8 @@
 ﻿using Alea;
 using Alea.CSharp;
-using Alea.IL;
-using Microsoft.FSharp.Core;
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Alea.Parallel;
 
 namespace CalkaGPU
@@ -59,7 +53,6 @@ namespace CalkaGPU
             return result;
         }
 
-        [Test]
         [GpuManaged]
         public static double CalkaGPU(int n)
         {
