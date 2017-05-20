@@ -4,33 +4,48 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using Alea.Parallel;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Globalization;
 
 namespace CalkaGPU
 {
     class Program
     {
         private const int BlockSize = 32;
+        private static string[] ClientsURLs = new string[] { "http://localhost:8081", "http://localhost:8082" };
+
         static void Main(string[] args)
         {
             int n = 10000;
             Stopwatch stopwatch = new Stopwatch();
 
+            //stopwatch.Start();
+            ////var result = CalkaGPU(n);
+            //stopwatch.Stop();
+
+            //Console.WriteLine(result);
+            //Console.WriteLine("Time: " + stopwatch.Elapsed.TotalSeconds);
+
+            //result = 0;
+
+            //stopwatch.Reset();
+
             stopwatch.Start();
-            var result = CalkaGPU(n);
+            var result = CalkaCPU(n);
             stopwatch.Stop();
 
             Console.WriteLine(result);
             Console.WriteLine("Time: " + stopwatch.Elapsed.TotalSeconds);
 
-            result = 0;
-
             stopwatch.Reset();
 
             stopwatch.Start();
-            result = CalkaCPU(n);
+            var result1 = CalkaRozproszone(n).Result;
             stopwatch.Stop();
 
-            Console.WriteLine(result);
+            Console.WriteLine(result1);
             Console.WriteLine("Time: " + stopwatch.Elapsed.TotalSeconds);
             Console.ReadLine();
         }
@@ -64,6 +79,35 @@ namespace CalkaGPU
             double d = (ub - lb) / n;
             gpu.Launch(Kernel, lp, result, n, lb, ub, d);
             return result.Sum();
+        }
+
+        private async static Task<double> CalkaRozproszone(int n)
+        {
+            double result = 0;
+            double ub = 0;
+            double lb = 0;
+            double chunk = (double)1 / (double)ClientsURLs.Length;
+
+            ub = chunk;        
+            foreach(var clientUrl in ClientsURLs)
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(clientUrl);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(string.Format("api/calka/wynik/cpu?lb={0}&ub={1}&n={2}", lb.ToString().Replace(",", "."), ub.ToString().Replace(",", "."), n));
+
+                if (response.IsSuccessStatusCode)
+                {
+                    result += double.Parse(response.Content.ReadAsStringAsync().Result, CultureInfo.InvariantCulture);
+                    lb += chunk;
+                    ub += chunk;
+                }
+                else
+                    throw new Exception("Wystąpił błąd podczas obliczania całki!");
+            }
+
+            return result;
         }
 
         public static void Kernel(double[] result, int n, double lb, double ub, double d)
