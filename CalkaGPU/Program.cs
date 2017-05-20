@@ -33,7 +33,8 @@ namespace CalkaGPU
             //stopwatch.Reset();
 
             stopwatch.Start();
-            var result = CalkaCPU(n);
+            var result = CalkaCPU(n, 0, 5000);
+            result += CalkaCPU(n, 5000, n);
             stopwatch.Stop();
 
             Console.WriteLine(result);
@@ -50,13 +51,13 @@ namespace CalkaGPU
             Console.ReadLine();
         }
 
-        private static double CalkaCPU(int n)
+        private static double CalkaCPU(int n, int start, int stop)
         {
             double result = 0;
             double ub = 1;
             double lb = 0;
             var dxy = (ub - lb) / n;
-            for (int yi = 0; yi < n; yi++)
+            for (int yi = start; yi < stop; yi++)
             {
                 double y = (yi + 0.5) * dxy;
                 for (int xi = 0; xi < n; xi++)

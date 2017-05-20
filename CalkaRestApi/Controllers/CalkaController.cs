@@ -12,9 +12,9 @@ namespace CalkaRestApi.Controllers
     {
         [HttpGet]
         [Route("api/calka/wynik/cpu")]
-        public IHttpActionResult WynikCPU(double lb, double ub, int n)
+        public IHttpActionResult WynikCPU(double lb, double ub, int n, int nMax)
         {
-            return Ok((new CalkaHelper()).CalkaCPU(lb, ub, n));
+            return Ok((new CalkaHelper()).CalkaCPU(lb, ub, n, nMax));
         }
 
        
