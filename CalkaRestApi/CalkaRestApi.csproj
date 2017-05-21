@@ -87,6 +87,7 @@
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\CalkaApi1.pubxml" />
     <None Include="Properties\PublishProfiles\CalkaApi2.pubxml" />
+    <None Include="Properties\PublishProfiles\CalkaApi3.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
