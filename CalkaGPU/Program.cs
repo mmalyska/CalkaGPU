@@ -20,7 +20,7 @@ namespace CalkaGPU
             stopwatch.Stop();
 
             Console.WriteLine(result);
-            Console.WriteLine("Time: " + stopwatch.Elapsed.TotalSeconds);
+            Console.WriteLine("GPU Time: " + stopwatch.Elapsed.TotalSeconds);
 
             result = 0;
 
@@ -31,7 +31,7 @@ namespace CalkaGPU
             stopwatch.Stop();
 
             Console.WriteLine(result);
-            Console.WriteLine("Time: " + stopwatch.Elapsed.TotalSeconds);
+            Console.WriteLine("CPU Time: " + stopwatch.Elapsed.TotalSeconds);
             Console.ReadLine();
         }
 
